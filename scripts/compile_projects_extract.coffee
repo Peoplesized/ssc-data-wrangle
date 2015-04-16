@@ -9,17 +9,14 @@
 fs = require 'fs'
 _ = require 'underscore'
 
+projects = fs.readdirSync(__dirname + "/../projects")
 
-class Process
-  constructor: ->
-    output = _.map fs.readdirSync(__dirname + "/../projects"), (file) ->
-      process.stdout.write '.'
-      project = JSON.parse(fs.readFileSync(__dirname + '/../projects/' + file))
-      _.pick project, 'project_id', 'project_descr', 'project_title', 'document_name'
+output = _.map(projects, (file) ->
+  process.stdout.write '.'
+  project = JSON.parse(fs.readFileSync(__dirname + '/../projects/' + file))
+  _.pick project, 'project_id', 'project_descr', 'project_title', 'document_name'
+)
 
-    fs.writeFileSync(__dirname + "/../temp_files/titles_from_open.json", JSON.stringify(output))
+fs.writeFileSync(__dirname + "/../temp_files/titles_from_open.json", JSON.stringify(output))
 
-    console.log "\nWritten #{output.length} projects"
-      
-module.export = Process
-s = new Process
+console.log "\nWritten #{output.length} projects"
