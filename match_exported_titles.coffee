@@ -7,7 +7,7 @@ _ = require 'underscore'
 score = require 'string_score'
 
 suffix = '_test'
-# suffix = ''
+suffix = ''
 
 class Process
   constructor: ->
@@ -29,12 +29,13 @@ class Process
         topMatch = matches[0]
         return {
           searched_for: name
-          total_matches: allMatches.length
-          top_match_project_id: topMatch.project_id
-          top_match_project_title: topMatch.project_title
-          top_match_project_descr: topMatch.project_descr
-          top_match_confidence: topMatch.score
+          top_match_project_id: topMatch?.project_id
+          top_match_project_title: topMatch?.project_title
+          top_match_project_descr: topMatch?.project_descr
+          top_match_confidence: topMatch?.score
+          top_match_document_link: topMatch?.document_name[1]?.join('; ')
         }
+      .filter (project) -> project.top_match_project_id?
       .value()
 
     fs.writeFileSync(__dirname + "/matched_projects#{suffix}.json", JSON.stringify(output))
