@@ -18,6 +18,6 @@ output = _.map(projects, (file) ->
   _.pick project, 'project_id', 'project_descr', 'project_title', 'document_name'
 )
 
-fs.writeFileSync(__dirname + "/../temp_files/titles_from_open.json", JSON.stringify(output))
+fs.writeFileSync(__dirname + "/../temp_files/extract_from_open.json", JSON.stringify(output))
 
 console.log "\nWritten #{output.length} projects"
