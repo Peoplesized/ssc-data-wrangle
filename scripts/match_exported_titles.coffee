@@ -12,14 +12,14 @@ DESTINATION_MATCH_FIELD = 'project_descr'
 
 class Process
   constructor: ->
-    # Load exported projects from OpenRefine
-    projects_to_match = JSON.parse(fs.readFileSync(__dirname + "/../temp_files/new_projects_to_match.json", 'utf8'))
-    # Load projects extract from open.undp.org
+    @_loadData()
+    @_write(@_processAll(@projects_to_match))
+    
+  _loadData: ->
+    # Exported projects from OpenRefine
+    @projects_to_match = JSON.parse(fs.readFileSync(__dirname + "/../temp_files/new_projects_to_match.json", 'utf8'))
+    # Projects extract from open.undp.org
     @open_titles_to_search = JSON.parse(fs.readFileSync(__dirname + "/../temp_files/extract_from_open.json", 'utf8'))
-
-    output = @_processAll(projects_to_match)
-    fs.writeFileSync(__dirname + "/../output/matched_projects.json", JSON.stringify(output))
-    console.log "\nWritten #{output.length} projects"
 
   _processAll: (projects) ->
     _.chain(projects)
@@ -29,7 +29,7 @@ class Process
 
   _processProject: (project) ->
     name = project[SOURCE_MATCH_FIELD]
-    matches = @_getDescrScoresFor(name)
+    matches = @_getScoresFor(name)
     topMatch = matches[0]
 
     return {
@@ -41,7 +41,14 @@ class Process
       top_match_document_link : topMatch?.document_name[1]?.join('; ')
     }
 
-  _getDescrScoresFor: (name) ->
+  _write: (output) ->
+    fs.writeFileSync(__dirname + "/../output/matched_projects.json", JSON.stringify(output))
+    console.log "\nWritten #{output.length} projects"
+
+  # 
+  # Scoring
+  # 
+  _getScoresFor: (name) ->
     _.chain(@_matchTerm(name))
       .filter (match) -> match.score > MATCH_CONFIDENCE
       .sortBy (match) -> -match.score
@@ -55,6 +62,5 @@ class Process
       score = Math.ceil(descr.score(term) * 100) / 100
       return _.extend(score: score, open_project)
 
-  
 module.export = Process
-s = new Process
+new Process
