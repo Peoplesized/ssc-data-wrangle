@@ -1,4 +1,4 @@
-# Scripts to wrangle SSC data 
+# Scripts to wrangle SSC data
 
 *Especially for the '469' projects in the second batch*
 
