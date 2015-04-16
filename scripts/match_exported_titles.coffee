@@ -15,7 +15,7 @@ class Process
     # Load exported projects from OpenRefine
     projects_to_match = JSON.parse(fs.readFileSync(__dirname + "/../temp_files/new_projects_to_match.json", 'utf8'))
     # Load projects extract from open.undp.org
-    @open_titles_to_search = JSON.parse(fs.readFileSync(__dirname + "/../temp_files/titles_from_open.json", 'utf8'))
+    @open_titles_to_search = JSON.parse(fs.readFileSync(__dirname + "/../temp_files/extract_from_open.json", 'utf8'))
 
     output = @_processAll(projects_to_match)
     fs.writeFileSync(__dirname + "/../output/matched_projects.json", JSON.stringify(output))
